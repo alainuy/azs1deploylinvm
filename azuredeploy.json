@@ -14,10 +14,11 @@
         "description": "Name of Public IP"
       }
     },
-    "vmName": {
+    "VMNamePrefix": {
       "type": "string",
+      "defaultValue": "ubuntuvm-",
       "metadata": {
-        "description": "VmNamePrefix"
+        "description": "Name of VM with -"
       }
     },
     "vmSize": {
@@ -153,7 +154,7 @@
     {
       "apiVersion": "2017-12-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('vmName')]",
+      "name": "[parameters('VMNamePrefix')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
@@ -164,7 +165,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[parameters('vmName')]",
+          "computerName": "[parameters('VMNamePrefix')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPasswordOrKey')]",
           "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
@@ -177,7 +178,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('vmName'),'_OSDisk')]",
+            "name": "[concat(parameters('VMNamePrefix'),'_OSDisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
